@@ -1,12 +1,17 @@
 <script setup>
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useStore } from 'vuex'
+
+const store = useStore()
+const totalProductsInCart = computed(() => store.getters['cart/cartItemsCount'])
 </script>
 
 <template>
   <nav class="navbar">
     <!-- Left: Logo -->
     <div class="logo">
-      <h2>VuePasal</h2>
+      <RouterLink to="/"><h2>VuePasal</h2></RouterLink>
     </div>
 
     <!-- Middle: Links -->
@@ -19,7 +24,9 @@ import { RouterLink } from 'vue-router'
 
     <!-- Right: Cart Button -->
     <div class="cart">
-      <button class="cart-btn">🛒 Cart</button>
+      <button class="cart-btn">
+        🛒 Cart {{ totalProductsInCart ? totalProductsInCart : null }}
+      </button>
     </div>
   </nav>
 </template>
@@ -30,11 +37,16 @@ import { RouterLink } from 'vue-router'
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  background: var(--primary-color); /* Blue Navbar */
+  background: var(--primary-color);
   color: white;
 }
 
 /* Logo */
+.logo a {
+  text-decoration: none;
+  color: #f5f5f5;
+}
+
 .logo h2 {
   font-size: 1.8rem;
   font-weight: bold;

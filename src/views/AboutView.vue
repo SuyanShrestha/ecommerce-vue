@@ -15,7 +15,7 @@
     <div class="about-right">
       <div class="stats-container">
         <div class="stat-card">
-          <h3 class="stat-number">500+</h3>
+          <h3 class="stat-number">800+</h3>
           <p class="stat-label">Happy Customers</p>
         </div>
         <div class="stat-card">
@@ -23,7 +23,7 @@
           <p class="stat-label">Years in Business</p>
         </div>
         <div class="stat-card">
-          <h3 class="stat-number">800+</h3>
+          <h3 class="stat-number">2500+</h3>
           <p class="stat-label">Products Sold</p>
         </div>
       </div>

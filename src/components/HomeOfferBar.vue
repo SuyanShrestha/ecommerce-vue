@@ -1,12 +1,12 @@
 <template>
   <div class="offer">
     <p class="offer-text">Get 25% OFF on your first order.</p>
-    <a class="offer-link" href="#">Order Now</a>
+    <RouterLink class="offer-link" to="/products">Order Now</RouterLink>
   </div>
 </template>
 
-<script>
-export default {}
+<script setup>
+import { RouterLink } from 'vue-router'
 </script>
 
 <style scoped>

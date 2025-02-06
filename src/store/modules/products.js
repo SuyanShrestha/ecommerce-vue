@@ -13,7 +13,6 @@ export default {
   actions: {
     async fetchProducts(context) {
       const { data } = await axios.get('https://dummyjson.com/products')
-      console.log('axios data: ', data)
       context.commit('setProducts', data.products)
     },
   },
