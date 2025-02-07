@@ -43,12 +43,22 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 6rem 12rem;
-  background: url('../assets/svg/wavy.svg') no-repeat center center;
-  background-size: cover;
-  position: relative;
-  height: 80vh;
+  height: 100vh;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.about-section::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: url('@/assets/svg/wave-top-bajra.svg') no-repeat top center;
+  background-size: cover;
+  transform: rotate(180deg);
+  z-index: -1;
 }
 
 .about-left {

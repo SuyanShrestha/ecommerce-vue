@@ -5,6 +5,7 @@ export default {
   },
   mutations: {
     incrementProductCount(state, product) {
+      console.log('cart items: ', state.cartItems)
       const existingProduct = state.cartItems.find((item) => item.id === product.id)
       if (existingProduct) {
         existingProduct.count++
@@ -31,6 +32,9 @@ export default {
     getProductCount: (state) => (productId) => {
       const product = state.cartItems.find((item) => item.id === productId)
       return product ? product.count : 0
+    },
+    getProductsInCart: (state) => {
+      return state.cartItems
     },
   },
 }

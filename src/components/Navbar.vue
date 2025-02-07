@@ -24,9 +24,9 @@ const totalProductsInCart = computed(() => store.getters['cart/cartItemsCount'])
 
     <!-- Right: Cart Button -->
     <div class="cart">
-      <button class="cart-btn">
+      <RouterLink to="/cart" class="cart-btn">
         🛒 Cart {{ totalProductsInCart ? totalProductsInCart : null }}
-      </button>
+      </RouterLink>
     </div>
   </nav>
 </template>
@@ -74,6 +74,7 @@ const totalProductsInCart = computed(() => store.getters['cart/cartItemsCount'])
 
 /* Cart Button */
 .cart-btn {
+  text-decoration: none;
   background: white;
   color: #0d6efd;
   font-size: 1rem;
