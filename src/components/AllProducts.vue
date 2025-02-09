@@ -1,8 +1,8 @@
 <template>
   <div class="page-container">
     <h1 class="page-title">Our Products</h1>
-    <div v-if="productList.length === 0" class="loading-message">Loading products...</div>
     <div class="container">
+      <div v-if="productList.length === 0" class="loading-message">Loading products...</div>
       <div v-for="product in productList" :key="product.id" class="product-card">
         <div class="product-image-container">
           <img
@@ -52,7 +52,7 @@ export default {
   name: 'AllProductsList',
   setup() {
     const store = useStore()
-    const productList = computed(() => store.state.products.products)
+    const productList = computed(() => store.state.products.filteredProducts)
     const getProductCount = (productId) =>
       computed(() => store.getters['cart/getProductCount'](productId))
 

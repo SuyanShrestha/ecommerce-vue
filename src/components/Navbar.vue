@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 import { useStore } from 'vuex'
 
 const store = useStore()
-const totalProductsInCart = computed(() => store.getters['cart/cartItemsCount'])
+const totalProductsInCart = computed(() => store.getters['cart/getCartItemsCount'])
 </script>
 
 <template>
@@ -36,9 +36,13 @@ const totalProductsInCart = computed(() => store.getters['cart/cartItemsCount'])
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 8vh;
   padding: 1rem 2rem;
   background: var(--primary-color);
   color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 /* Logo */

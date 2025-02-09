@@ -6,7 +6,7 @@
       <span class="cart-title-items">Item Name</span>
       <span class="cart-title-items">Quantity</span>
       <span class="cart-title-items">Price per Unit</span>
-      <span class="cart-title-items">Discount (%)</span>
+      <span class="cart-title-items">Discount</span>
       <span class="cart-title-items">Price After Discount</span>
       <span class="cart-title-items">Final Total</span>
     </div>
@@ -29,31 +29,32 @@
         <span class="cart-item">{{ item.count }}</span>
         <button class="product-to-cart-button" @click="decrementProductCount(item)">-</button>
       </div>
-      <span class="cart-item">{{ item.price }}</span>
-      <span class="cart-item">{{ item.discountPercentage || 'Fixed Price' }}</span>
+      <span class="cart-item">${{ item.price }}</span>
       <span class="cart-item">
-        {{ getUnitPriceAfterDiscount(item) }}
+        {{ item.discountPercentage ? item.discountPercentage + '%' : 'Fixed Price' }}
       </span>
-      <span class="cart-item">
-        {{ getTotalPriceAfterDiscount(item) }}
-      </span>
+      <span class="cart-item"> ${{ getUnitPriceAfterDiscount(item) }} </span>
+      <span class="cart-item cart-item-total"> ${{ getTotalPriceAfterDiscount(item) }} </span>
     </div>
 
     <!-- total calculation-->
-    <div class="cart-price"></div>
+    <div class="cart-price">
+      <span class="cart-price-heading">TOTAL</span>
+      <span class="cart-price-heading">${{ totalAmountInCart }}</span>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useStore } from 'vuex'
+import { roundToTwo } from '@/custom/helper.js'
 
 const store = useStore()
 const cartItems = computed(() => store.state.cart.cartItems)
+const totalAmountInCart = computed(() => store.getters['cart/getTotalAmount'])
 
 // calculate pricings
-const roundToTwo = (value) => Number(value.toFixed(2))
-
 const getUnitPriceAfterDiscount = (item) => {
   const discount = item.discountPercentage || 0
   return roundToTwo(item.price - (item.price * discount) / 100)
@@ -119,6 +120,10 @@ const decrementProductCount = (product) => {
   gap: 1rem;
 }
 
+.cart-item-total {
+  font-weight: bold;
+}
+
 .product-to-cart-button {
   background-color: var(--success-color);
   color: white;
@@ -140,5 +145,20 @@ button {
   padding: 5px 10px;
   margin-top: 5px;
   cursor: pointer;
+}
+
+.cart-price {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 8rem;
+  min-height: 5rem;
+}
+
+.cart-price .cart-price-heading {
+  font-weight: 800;
+  font-size: 1.5rem;
 }
 </style>

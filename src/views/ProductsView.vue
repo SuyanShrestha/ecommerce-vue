@@ -1,5 +1,8 @@
 <template>
   <div class="page-container">
+    <!-- Controllers and filters -->
+    <ProductsSidebar />
+
     <!-- Main Content -->
     <AllProductsList />
   </div>
@@ -7,6 +10,7 @@
 
 <script setup>
 import AllProductsList from '@/components/AllProducts.vue'
+import ProductsSidebar from '@/components/ProductsSidebar.vue'
 </script>
 
 <style scoped>
@@ -14,8 +18,8 @@ import AllProductsList from '@/components/AllProducts.vue'
   position: relative;
   overflow: hidden;
   text-align: center;
-  padding: 50px 0;
 }
+
 /* Top Wave */
 .page-container::before {
   content: '';

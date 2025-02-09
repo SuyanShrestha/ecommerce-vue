@@ -1,3 +1,5 @@
+import { roundToTwo } from "@/custom/helper"
+
 export default {
   namespaced: true,
   state: {
@@ -5,7 +7,6 @@ export default {
   },
   mutations: {
     incrementProductCount(state, product) {
-      console.log('cart items: ', state.cartItems)
       const existingProduct = state.cartItems.find((item) => item.id === product.id)
       if (existingProduct) {
         existingProduct.count++
@@ -23,7 +24,7 @@ export default {
     },
   },
   getters: {
-    cartItemsCount: (state) => {
+    getCartItemsCount: (state) => {
       const allProductsCountInCart = state.cartItems.reduce((total, product) => {
         return total + product.count
       }, 0)
@@ -33,8 +34,14 @@ export default {
       const product = state.cartItems.find((item) => item.id === productId)
       return product ? product.count : 0
     },
-    getProductsInCart: (state) => {
-      return state.cartItems
+    getTotalAmount: (state) => {
+      const totalPrice = state.cartItems.reduce((total, product) => {
+        const discount = product.discountPercentage ? product.discountPercentage / 100 : 0
+        const discountedUnitPrice = product.price - product.price * discount
+        const productPrice = product.count * discountedUnitPrice
+        return total + productPrice
+      }, 0)
+      return roundToTwo(totalPrice)
     },
   },
 }
