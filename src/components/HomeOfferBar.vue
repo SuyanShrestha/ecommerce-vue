@@ -22,15 +22,15 @@ import { RouterLink } from 'vue-router'
 }
 .offer-text,
 .offer-link {
-  color: #ffffff;
+  color: var(--white);
 }
 .offer-link {
   text-decoration: none;
-  color: #ffd700;
+  color: #ffb300;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 .offer-link:hover {
-  color: #ffffff;
+  color: #76ff03;
 }
 </style>

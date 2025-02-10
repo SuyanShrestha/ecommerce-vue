@@ -1,13 +1,30 @@
 :root {
-  --primary-color: #34495e;
-  --secondary-color: #16a085;
-  --background-color: #f5f5f5;
-  --text-color: #2c3e50;
-  --text-muted: #2a3d45;
-  --success-color: #2ecc71;
-  --success-darker-color: #27ae60;
-  --success-lighter-color: #a2f5c5;
-  --danger-color: #e67e22;
+  --primary-main: #81c784;
+  --secondary-main: #388e3c;
+
+  --background-light: #f1f8e9;
+  --background-dark: #1b5e20;
+  --text-primary: #2c3e50;
+  --text-secondary: #4b5563;
+  --text-muted: #94a3b8;
+
+  --button-primary: #4caf50; /* Vibrant green for call-to-action */
+  --button-primary-hover: #388e3c;
+  --button-secondary: #a5d6a7; /* Softer green for subtle actions */
+  --button-secondary-hover: #81c784;
+
+  --button-text-light: #ffffff;
+  --button-text-dark: #1b5e20;
+
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+
+  --border-light: #e0e7e9; /* for forms*/
+  --border-dark: #2e7d32; /* stronger divider for sections*/
+
+  --white: #ffffff;
+  --black: #000000;
 }
 
 * {
