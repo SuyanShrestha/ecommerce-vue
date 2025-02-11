@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="component-container">
     <h1 class="page-title">Our Products</h1>
     <div class="container">
       <div v-if="productList.length === 0" class="loading-message">Loading products...</div>
@@ -30,12 +30,12 @@
             {{ product.availabilityStatus }}
           </p>
           <div class="product-to-cart">
-            <button class="product-to-cart-button" @click="incrementProductCount(product)">
-              +
-            </button>
-            <span class="product-to-cart-count">{{ getProductCount(product.id) }}</span>
             <button class="product-to-cart-button" @click="decrementProductCount(product)">
               -
+            </button>
+            <span class="product-to-cart-count">{{ getProductCount(product.id) }}</span>
+            <button class="product-to-cart-button" @click="incrementProductCount(product)">
+              +
             </button>
           </div>
         </div>
@@ -83,6 +83,16 @@ export default {
 </script>
 
 <style scoped>
+.component-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+
+  overflow-y: auto;
+  background: var(--background-light);
+}
+
 .page-title {
   text-align: center;
   font-size: 2.5rem;
@@ -230,11 +240,11 @@ export default {
 }
 
 .product-to-cart-button {
-  background-color: var(--success-color);
-  color: white;
+  background-color: var(--button-secondary);
+  color: var(--button-text-dark);
   border: none;
   padding: 6px 12px;
-  font-size: 16px;
+  font-size: 1.5rem;
   font-weight: bold;
   border-radius: 5px;
   cursor: pointer;
@@ -242,7 +252,7 @@ export default {
 }
 
 .product-to-cart-button:hover {
-  background: var(--success-darker-color);
+  background: var(--button-secondary-hover);
 }
 
 .product-to-cart-count {

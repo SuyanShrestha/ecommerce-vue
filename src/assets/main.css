@@ -1,9 +1,12 @@
 :root {
   --primary-main: #81c784;
-  --secondary-main: #388e3c;
+  --secondary-main: #4caf50;
 
   --background-light: #f1f8e9;
+  --background-light-200: #c8e6c9;
+  --background-light-300: #dcefd4;
   --background-dark: #1b5e20;
+
   --text-primary: #2c3e50;
   --text-secondary: #4b5563;
   --text-muted: #94a3b8;
@@ -13,18 +16,21 @@
   --button-secondary: #a5d6a7; /* Softer green for subtle actions */
   --button-secondary-hover: #81c784;
 
-  --button-text-light: #ffffff;
+  --button-text-light: #d1e8e2;
   --button-text-dark: #1b5e20;
 
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
 
-  --border-light: #e0e7e9; /* for forms*/
+  --border-light: #f1f8e9; /* for forms*/
   --border-dark: #2e7d32; /* stronger divider for sections*/
 
   --white: #ffffff;
   --black: #000000;
+
+  --neumo-shadow-light: #d1e7c5;
+  --neumo-shadow-dark: #b0c2a8;
 }
 
 * {

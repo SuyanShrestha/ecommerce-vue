@@ -37,7 +37,7 @@ const totalProductsInCart = computed(() => store.getters['cart/getCartItemsCount
     <!-- Right: Cart Button -->
     <div class="cart">
       <RouterLink to="/cart" class="cart-btn">
-        Cart {{ totalProductsInCart ? totalProductsInCart : null }}
+        Cart <span v-if="totalProductsInCart" class="cart-count">: {{ totalProductsInCart }}</span>
       </RouterLink>
     </div>
   </nav>
@@ -78,6 +78,10 @@ const totalProductsInCart = computed(() => store.getters['cart/getCartItemsCount
   padding: 0 2rem;
   border-top-right-radius: 3rem;
   border-bottom-left-radius: 3rem;
+
+  box-shadow:
+    inset 6px 6px 6px var(--neumo-shadow-dark),
+    inset -6px -6px 6px var(--neumo-shadow-dark);
   background-color: var(--button-secondary);
   color: var(--button-text-dark);
   cursor: pointer;

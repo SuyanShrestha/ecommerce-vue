@@ -8,6 +8,7 @@ const props = defineProps({
   padding: { type: String, default: '12px 18px' },
   border: { type: String, default: 'none' },
   hoverBackground: { type: String, default: 'var(--button-primary-hover)' },
+  customClass: { type: String, default: '' },
 })
 
 const computedStyles = computed(() => ({
@@ -27,6 +28,7 @@ const hoverStyles = computed(() => ({
 
 <template>
   <button
+    :class="[props.customClass]"
     :style="computedStyles"
     @mouseover="computedStyles.backgroundColor = hoverStyles.backgroundColor"
     @mouseleave="computedStyles.backgroundColor = props.backgroundColor"
