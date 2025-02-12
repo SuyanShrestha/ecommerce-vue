@@ -17,7 +17,9 @@
 
       <!-- custom dropdown -->
       <div class="custom-dropdown" @click="toggleDropdown">
-        <span class="selected-option">{{ selectedSortLabel }}</span>
+        <button class="selected-option" :class="{ 'selected-option-pressed': dropdownOpen }">
+          {{ selectedSortLabel }}
+        </button>
         <ul v-if="dropdownOpen" class="dropdown-menu">
           <li
             v-for="option in sortOptions"
@@ -204,12 +206,20 @@ const resetAllFilters = () => {
   padding: 0 1.6rem;
 }
 
+.selected-option-pressed {
+  box-shadow:
+    inset 3px 3px 3px var(--neumo-shadow-dark),
+    inset -2px -2px 2px var(--neumo-shadow-light);
+}
+
 .dropdown-menu {
   position: absolute;
   top: 100%;
   left: 0;
   width: 100%;
   background: var(--background-light-200);
+  border: 1px solid var(--border-dark);
+  border-top: none;
   border-radius: 1rem;
   box-shadow:
     3px 3px 3px var(--neumo-shadow-dark),
@@ -224,6 +234,7 @@ const resetAllFilters = () => {
   cursor: pointer;
   text-align: center;
   transition: background 0.3s ease;
+  color: var(--text-primary);
 }
 
 .dropdown-menu li:hover {
@@ -232,6 +243,6 @@ const resetAllFilters = () => {
 
 .selected {
   font-weight: bold;
-  color: var(--secondary-main);
+  color: var(--text-secondary);
 }
 </style>
