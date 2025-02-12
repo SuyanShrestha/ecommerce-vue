@@ -3,7 +3,7 @@
     <input type="text" class="search-bar" v-model="searchText" placeholder="Search product..." />
 
     <div class="rating-filter-container section-container">
-      <span class="filter-name">Sort by Rating</span>
+      <span class="filter-name">Filter by Rating</span>
 
       <div class="rating-filter-inner-container">
         <input
@@ -18,21 +18,27 @@
 
     <!-- sort by price -->
     <div class="price-sort-container section-container">
-      <span class="filter-name">Sort by Price</span>
-      <div class="custom-dropdown" @click="toggleDropdown">
-        <button class="selected-option" :class="{ 'selected-option-pressed': dropdownOpen }">
-          {{ selectedSortLabel }}
-        </button>
-        <ul v-if="dropdownOpen" class="dropdown-menu">
-          <li
-            v-for="option in sortOptions"
-            :key="option.value"
-            @click.stop="selectSortOption(option.value)"
-            :class="{ selected: option.value === sortPriceBy }"
-          >
-            {{ option.label }}
-          </li>
-        </ul>
+      <span class="filter-name">Filter by Price</span>
+      <div class="price-sort-inner-container">
+        <div class="price-input-container">
+          <input type="text" class="price-input" v-model="minPrice" placeholder="Min Price" />
+          <input type="text" class="price-input" v-model="maxPrice" placeholder="Max Price" />
+        </div>
+        <div class="custom-dropdown" @click="toggleDropdown">
+          <button class="selected-option" :class="{ 'selected-option-pressed': dropdownOpen }">
+            {{ selectedSortLabel }}
+          </button>
+          <ul v-if="dropdownOpen" class="dropdown-menu">
+            <li
+              v-for="option in sortOptions"
+              :key="option.value"
+              @click.stop="selectSortOption(option.value)"
+              :class="{ selected: option.value === sortPriceBy }"
+            >
+              {{ option.label }}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -41,12 +47,19 @@
       <span class="filter-name">Categories</span>
       <div v-if="categoryList.length === 0" class="loading-message">Loading categories...</div>
       <ul class="category-wrapper">
-        <li class="category-item" @click="selectCategory('All')">ALL</li>
+        <li
+          class="category-item"
+          @click="selectCategory('all')"
+          :class="{ 'selected-category': selectedCategory === 'all' }"
+        >
+          ALL
+        </li>
         <li
           v-for="category in categoryList"
           :key="category.id"
           class="category-item"
           @click="selectCategory(category)"
+          :class="{ 'selected-category': selectedCategory === category }"
         >
           {{ category.name.toUpperCase() }}
         </li>
@@ -68,7 +81,10 @@ const store = useStore()
 const searchText = ref('')
 const ratingForFilter = ref('')
 const sortPriceBy = ref('')
+const minPrice = ref('')
+const maxPrice = ref('')
 const dropdownOpen = ref(false)
+const selectedCategory = ref('all')
 
 const sortOptions = [
   { label: 'No Sorting', value: '' },
@@ -94,6 +110,18 @@ const handleRatingClick = () => {
   store.commit('products/filterByRating', Number(ratingForFilter.value))
 }
 
+// filterByPrice
+const debouncedMinPrice = useDebounce(minPrice, 500)
+const debouncedMaxPrice = useDebounce(maxPrice, 500)
+
+watch(debouncedMinPrice, (newVal) => {
+  store.commit('products/filterByMinPrice', newVal)
+})
+watch(debouncedMaxPrice, (newVal) => {
+  console.log('maxPrice new: ', newVal)
+  store.commit('products/filterByMaxPrice', newVal)
+})
+
 // sortPrice
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
@@ -110,14 +138,18 @@ watch(sortPriceBy, (newSort) => {
 
 // filter by category
 const selectCategory = (category) => {
+  selectedCategory.value = category
   store.commit('products/filterByCategory', category)
 }
 
 const resetAllFilters = () => {
   searchText.value = ''
   ratingForFilter.value = ''
+  minPrice.value = ''
+  maxPrice.value = ''
   sortPriceBy.value = ''
   dropdownOpen.value = false
+  selectedCategory.value = 'all'
   store.commit('products/resetAllFilters')
 }
 </script>
@@ -143,6 +175,7 @@ const resetAllFilters = () => {
 
 .search-bar,
 .rating-input,
+.price-input,
 .selected-option {
   border: 1px solid var(--border-dark);
   border-radius: 2rem;
@@ -162,7 +195,8 @@ const resetAllFilters = () => {
 }
 
 .search-bar:focus,
-.rating-input:focus {
+.rating-input:focus,
+.price-input:focus {
   box-shadow:
     inset 3px 3px 3px var(--neumo-shadow-dark),
     inset -2px -2px 2px var(--neumo-shadow-light);
@@ -214,14 +248,35 @@ const resetAllFilters = () => {
 .price-sort-container {
   width: 90%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.price-sort-inner-container {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
+}
+
+.price-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .filter-name {
   font-size: 1.25rem;
   font-weight: bold;
   color: var(--text-secondary);
+}
+
+.price-input {
+  padding: 1rem 2rem;
+  width: 12rem;
+  /* width: 40%; */
 }
 
 /* Custom Dropdown */
@@ -277,7 +332,8 @@ const resetAllFilters = () => {
   background: var(--background-light-300);
 }
 
-.selected {
+.selected,
+.selected-category {
   font-weight: bold;
   color: var(--text-secondary);
 }
@@ -303,8 +359,10 @@ const resetAllFilters = () => {
   border: 1px solid var(--border-dark);
   border-left: none;
   border-top: none;
+  border-bottom-right-radius: 4px;
   padding: 0 1rem;
   background: var(--background-light-200);
+  color: var(--text-secondary);
   box-shadow:
     3px 3px 3px var(--neumo-shadow-dark),
     -2px -2px 2px var(--neumo-shadow-light);
@@ -318,5 +376,13 @@ const resetAllFilters = () => {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+}
+
+.selected-category {
+  border: 1px solid var(--border-dark);
+  border-radius: 4px;
+  box-shadow:
+    inset 3px 3px 3px var(--neumo-shadow-dark),
+    inset -2px -2px 2px var(--neumo-shadow-light);
 }
 </style>

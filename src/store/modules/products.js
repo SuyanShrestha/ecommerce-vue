@@ -8,6 +8,8 @@ export default {
     allCategories: [],
     searchText: '',
     rating: null,
+    minPrice: '',
+    maxPrice: '',
     sortPrice: '',
     category: '',
   },
@@ -42,6 +44,16 @@ export default {
       this.commit('products/applyFilters')
     },
 
+    filterByMinPrice(state, minPrice) {
+      state.minPrice = minPrice
+      this.commit('products/applyFilters')
+    },
+
+    filterByMaxPrice(state, maxPrice) {
+      state.maxPrice = maxPrice
+      this.commit('products/applyFilters')
+    },
+
     applyFilters(state) {
       let filtered = state.products
 
@@ -57,7 +69,16 @@ export default {
         filtered = filtered.filter((product) => product.rating >= state.rating)
       }
 
-      // sorting by price
+      // minPrice and maxPrice
+      if (state.minPrice) {
+        filtered = filtered.filter((product) => product.price >= state.minPrice)
+      }
+      if (state.maxPrice) {
+        console.log('state.maxPrice: ', state.maxPrice)
+        filtered = filtered.filter((product) => product.price <= state.maxPrice)
+      }
+
+      // sortByPrice
       if (state.sortPrice === '') {
         // this will point to original filtered since we are not using spread operator
         state.filteredProducts = filtered
@@ -81,6 +102,8 @@ export default {
       state.rating = null
       state.sortPrice = ''
       state.category = ''
+      state.minPrice = ''
+      state.maxPrice = ''
       state.filteredProducts = [...state.products]
     },
   },
