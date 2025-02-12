@@ -5,14 +5,20 @@ export default {
   state: {
     products: [],
     filteredProducts: [],
+    allCategories: [],
     searchText: '',
     rating: null,
     sortPrice: '',
+    category: '',
   },
   mutations: {
     setProducts(state, products) {
       state.products = products
       state.filteredProducts = products
+    },
+
+    setCategories(state, categories) {
+      state.allCategories = categories
     },
 
     filterBySearch(state, searchText) {
@@ -27,6 +33,12 @@ export default {
 
     sortPriceBy(state, newSort) {
       state.sortPrice = newSort
+      this.commit('products/applyFilters')
+    },
+
+    filterByCategory(state, category) {
+      state.category = category.name
+      console.log('category from filterByCategory: ', category.name)
       this.commit('products/applyFilters')
     },
 
@@ -56,6 +68,11 @@ export default {
         filtered = [...filtered].sort((a, b) => b.price - a.price)
       }
 
+      // category Filter
+      if (state.category) {
+        filtered = filtered.filter((product) => product.category === state.category)
+      }
+
       state.filteredProducts = filtered
     },
 
@@ -63,13 +80,29 @@ export default {
       state.searchText = ''
       state.rating = null
       state.sortPrice = ''
+      state.category = ''
       state.filteredProducts = [...state.products]
     },
   },
   actions: {
     async fetchProducts(context) {
-      const { data } = await axios.get('https://dummyjson.com/products')
-      context.commit('setProducts', data.products)
+      try {
+        const { data } = await axios.get('https://dummyjson.com/products')
+        context.commit('setProducts', data.products)
+        const categories = data.products
+          .map((product) => product.category)
+          .reduce((unique, category) => {
+            // to add only unique categories
+            if (!unique.some((c) => c.name === category)) {
+              unique.push({ id: unique.length + 1, name: category })
+            }
+            return unique
+          }, [])
+          .sort((a, b) => a.name.localeCompare(b.name)) // Alphabetically sorted categories
+        context.commit('setCategories', categories)
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      }
     },
   },
 }

@@ -44,3 +44,10 @@ body {
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
 }
+
+.loading-message {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  margin: 2rem 0;
+}

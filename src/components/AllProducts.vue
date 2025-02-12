@@ -104,7 +104,7 @@ export default {
 .loading-message {
   text-align: center;
   font-size: 1.2rem;
-  color: #6b7280;
+  color: var(--text-muted);
   margin: 2rem 0;
 }
 
