@@ -216,6 +216,7 @@ const resetAllFilters = () => {
     -2px -2px 2px var(--neumo-shadow-light);
   padding: 0.5rem 0;
   z-index: 10;
+  list-style-type: none;
 }
 
 .dropdown-menu li {

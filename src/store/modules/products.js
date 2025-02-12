@@ -46,10 +46,14 @@ export default {
       }
 
       // sorting by price
-      if (state.sortPrice === 'low-to-high') {
-        filtered = filtered.sort((a, b) => a.price - b.price)
+      if (state.sortPrice === '') {
+        // this will point to original filtered since we are not using spread operator
+        state.filteredProducts = filtered
+      } else if (state.sortPrice === 'low-to-high') {
+        // since we are using spread operator here, it will mutate a fresh copy of filtered, rather than original filtered
+        filtered = [...filtered].sort((a, b) => a.price - b.price)
       } else if (state.sortPrice === 'high-to-low') {
-        filtered = filtered.sort((a, b) => b.price - a.price)
+        filtered = [...filtered].sort((a, b) => b.price - a.price)
       }
 
       state.filteredProducts = filtered
@@ -59,7 +63,7 @@ export default {
       state.searchText = ''
       state.rating = null
       state.sortPrice = ''
-      state.filteredProducts = state.products
+      state.filteredProducts = [...state.products]
     },
   },
   actions: {
