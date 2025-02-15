@@ -1,9 +1,16 @@
 <template>
   <div class="component-container">
-    <h1 class="page-title">Our Products</h1>
+    <h1 class="page-title">
+      {{ listType === 'favorites' ? 'Your Favorites' : 'Our Products' }}
+    </h1>
     <div class="container">
-      <div v-if="productList.length === 0" class="loading-message">Loading products...</div>
+      <div v-if="isLoading" class="loading-message">
+        {{ listType === 'favorites' ? 'Loading favorites...' : 'Loading products...' }}
+      </div>
       <div v-for="product in productList" :key="product.id" class="product-card">
+        <button class="favourite-icon-wrapper" @click="toggleFavorite(product)">
+          <fa :icon="[isFavorite(product.id) ? 'fas' : 'far', 'heart']" :class="'favourite-icon'" />
+        </button>
         <div class="product-image-container">
           <img
             :src="product.images[0] || product.thumbnail"
@@ -45,20 +52,44 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
   name: 'AllProductsList',
-  setup() {
+  props: {
+    listType: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props) {
     const store = useStore()
-    const productList = computed(() => store.state.products.filteredProducts)
+    const isLoading = ref(true)
+    const productList = computed(() => {
+      if (props.listType === 'favorites') {
+        return store.state.favorites.filteredFavorites
+      }
+      return store.state.products.filteredProducts
+    })
     const getProductCount = (productId) =>
       computed(() => store.getters['cart/getProductCount'](productId))
 
     const fetchProducts = () => {
-      store.dispatch('products/fetchProducts')
+      if (props.listType === 'products') {
+        store.dispatch('products/fetchProducts')
+      }
+      isLoading.value = false
     }
+
+    watch(
+      () => props.listType,
+      (newListType) => {
+        if (newListType === 'products') {
+          fetchProducts()
+        }
+      },
+    )
 
     const incrementProductCount = (product) => {
       store.commit('cart/incrementProductCount', product)
@@ -67,16 +98,31 @@ export default {
       store.commit('cart/decrementProductCount', product)
     }
 
+    // favorites
+    const isFavorite = (productId) => {
+      return store.state.favorites.favorites.some((product) => product.id === productId)
+    }
+
+    const toggleFavorite = (product) => {
+      if (isFavorite(product.id)) {
+        store.commit('favorites/removeFromFavorites', product)
+      } else {
+        store.commit('favorites/addToFavorites', product)
+      }
+    }
+
     onMounted(() => {
       fetchProducts()
     })
 
     return {
+      isLoading,
       productList,
-      fetchProducts,
       getProductCount,
       incrementProductCount,
       decrementProductCount,
+      isFavorite,
+      toggleFavorite,
     }
   },
 }
@@ -246,7 +292,10 @@ export default {
   padding: 6px 12px;
   font-size: 1.5rem;
   font-weight: bold;
-  border-radius: 5px;
+  border-radius: 8px;
+  width: 2.5rem;
+  align-content: center;
+  text-align: center;
   cursor: pointer;
   transition: background 0.3s ease;
 }
@@ -261,5 +310,30 @@ export default {
   font-size: 16px;
   font-weight: bold;
   color: #333;
+}
+
+/* favourite button */
+.product-card {
+  position: relative;
+}
+
+.product-card .favourite-icon-wrapper {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  aspect-ratio: 1;
+  background-color: var(--button-secondary);
+  border: none;
+  outline: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.favourite-icon {
+  font-size: 1.75rem;
+  cursor: pointer;
+  /* color: var(--button-text-dark); */
+  color: var(--button-text-dark);
 }
 </style>

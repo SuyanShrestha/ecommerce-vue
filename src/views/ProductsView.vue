@@ -1,16 +1,25 @@
 <template>
   <div class="page-container">
     <!-- Controllers and filters -->
-    <ProductsSidebar />
+    <ProductsSidebar :listType="listType" />
 
     <!-- Main Content -->
-    <AllProductsList />
+    <AllProductsList :listType="listType" />
   </div>
 </template>
 
 <script setup>
+import { defineProps } from 'vue'
 import AllProductsList from '@/components/AllProducts.vue'
 import ProductsSidebar from '@/components/ProductsSidebar.vue'
+
+const props = defineProps({
+  listType: {
+    type: String,
+    required: true,
+    default: 'products',
+  },
+})
 </script>
 
 <style scoped>

@@ -3,8 +3,8 @@ import axios from 'axios'
 export default {
   namespaced: true,
   state: {
-    products: [],
-    filteredProducts: [],
+    favorites: [],
+    filteredFavorites: [],
     allCategories: [],
     searchText: '',
     rating: null,
@@ -14,47 +14,61 @@ export default {
     category: '',
   },
   mutations: {
-    setProducts(state, products) {
-      state.products = products
-      state.filteredProducts = products
+    addToFavorites(state, product) {
+      state.favorites.push(product)
+      this.commit('favorites/applyFilters')
+      this.commit('favorites/setCategories')
     },
 
-    setCategories(state, categories) {
+    removeFromFavorites(state, product) {
+      state.favorites = state.favorites.filter((item) => item.id !== product.id)
+      this.commit('favorites/applyFilters')
+      this.commit('favorites/setCategories')
+    },
+
+    setCategories(state) {
+      const categorySet = new Set(state.favorites.map((product) => product.category))
+
+      const categories = Array.from(categorySet)
+        .map((name, index) => ({ id: index + 1, name })) // Assigning IDs
+        .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically
+
       state.allCategories = categories
+
     },
 
     filterBySearch(state, searchText) {
       state.searchText = searchText
-      this.commit('products/applyFilters')
+      this.commit('favorites/applyFilters')
     },
 
     filterByRating(state, rating) {
       state.rating = rating
-      this.commit('products/applyFilters')
+      this.commit('favorites/applyFilters')
     },
 
     sortPriceBy(state, newSort) {
       state.sortPrice = newSort
-      this.commit('products/applyFilters')
+      this.commit('favorites/applyFilters')
     },
 
     filterByCategory(state, category) {
       state.category = category.name
-      this.commit('products/applyFilters')
+      this.commit('favorites/applyFilters')
     },
 
     filterByMinPrice(state, minPrice) {
       state.minPrice = minPrice
-      this.commit('products/applyFilters')
+      this.commit('favorites/applyFilters')
     },
 
     filterByMaxPrice(state, maxPrice) {
       state.maxPrice = maxPrice
-      this.commit('products/applyFilters')
+      this.commit('favorites/applyFilters')
     },
 
     applyFilters(state) {
-      let filtered = state.products
+      let filtered = state.favorites
 
       // search Filter
       if (state.searchText) {
@@ -78,10 +92,8 @@ export default {
 
       // sortByPrice
       if (state.sortPrice === '') {
-        // this will point to original filtered since we are not using spread operator
-        state.filteredProducts = filtered
+        state.filteredFavorites = filtered
       } else if (state.sortPrice === 'low-to-high') {
-        // since we are using spread operator here, it will mutate a fresh copy of filtered, rather than original filtered
         filtered = [...filtered].sort((a, b) => a.price - b.price)
       } else if (state.sortPrice === 'high-to-low') {
         filtered = [...filtered].sort((a, b) => b.price - a.price)
@@ -92,7 +104,7 @@ export default {
         filtered = filtered.filter((product) => product.category === state.category)
       }
 
-      state.filteredProducts = filtered
+      state.filteredFavorites = filtered
     },
 
     resetAllFilters(state) {
@@ -102,26 +114,7 @@ export default {
       state.category = ''
       state.minPrice = ''
       state.maxPrice = ''
-      state.filteredProducts = [...state.products]
-    },
-  },
-  actions: {
-    async fetchProducts(context) {
-      try {
-        const { data } = await axios.get('https://dummyjson.com/products')
-        context.commit('setProducts', data.products)
-        // Extract unique categories using Set
-        const categorySet = new Set(data.products.map((product) => product.category))
-
-        const categories = Array.from(categorySet)
-          .map((name, index) => ({ id: index + 1, name })) // Assigning IDs
-          .sort((a, b) => a.name.localeCompare(b.name)) // Sort alphabetically
-
-        
-        context.commit('setCategories', categories)
-      } catch (error) {
-        console.error('Error fetching products:', error)
-      }
+      state.filteredFavorites = [...state.favorites]
     },
   },
 }

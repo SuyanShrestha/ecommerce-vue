@@ -10,7 +10,7 @@
           type="text"
           class="rating-input"
           v-model="ratingForFilter"
-          placeholder="Enter minimum rating"
+          placeholder="Min Rating"
         />
         <button @click="handleRatingClick" class="filter-btn">Apply</button>
       </div>
@@ -73,11 +73,17 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useDebounce } from '@/composables/useDebounce.js'
 
 const store = useStore()
+const props = defineProps({
+  listType: {
+    type: String,
+    required: true,
+  },
+})
 const searchText = ref('')
 const ratingForFilter = ref('')
 const sortPriceBy = ref('')
@@ -96,18 +102,18 @@ const selectedSortLabel = computed(() => {
   return sortOptions.find((opt) => opt.value === sortPriceBy.value)?.label || 'Select'
 })
 
-const categoryList = computed(() => store.state.products.allCategories)
+const categoryList = computed(() => store.state[props.listType].allCategories)
 
 // filterBySearch
 const debouncedSearchText = useDebounce(searchText, 500)
 
 watch(debouncedSearchText, (newVal) => {
-  store.commit('products/filterBySearch', newVal)
+  store.commit(`${props.listType}/filterBySearch`, newVal)
 })
 
 // filterByRating
 const handleRatingClick = () => {
-  store.commit('products/filterByRating', Number(ratingForFilter.value))
+  store.commit(`${props.listType}/filterByRating`, Number(ratingForFilter.value))
 }
 
 // filterByPrice
@@ -115,11 +121,10 @@ const debouncedMinPrice = useDebounce(minPrice, 500)
 const debouncedMaxPrice = useDebounce(maxPrice, 500)
 
 watch(debouncedMinPrice, (newVal) => {
-  store.commit('products/filterByMinPrice', newVal)
+  store.commit(`${props.listType}/filterByMinPrice`, newVal)
 })
 watch(debouncedMaxPrice, (newVal) => {
-  console.log('maxPrice new: ', newVal)
-  store.commit('products/filterByMaxPrice', newVal)
+  store.commit(`${props.listType}/filterByMaxPrice`, newVal)
 })
 
 // sortPrice
@@ -133,13 +138,13 @@ const selectSortOption = (value) => {
 }
 
 watch(sortPriceBy, (newSort) => {
-  store.commit('products/sortPriceBy', newSort)
+  store.commit(`${props.listType}/sortPriceBy`, newSort)
 })
 
 // filter by category
 const selectCategory = (category) => {
   selectedCategory.value = category
-  store.commit('products/filterByCategory', category)
+  store.commit(`${props.listType}/filterByCategory`, category)
 }
 
 const resetAllFilters = () => {
@@ -150,7 +155,7 @@ const resetAllFilters = () => {
   sortPriceBy.value = ''
   dropdownOpen.value = false
   selectedCategory.value = 'all'
-  store.commit('products/resetAllFilters')
+  store.commit(`${props.listType}/resetAllFilters`)
 }
 </script>
 

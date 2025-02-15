@@ -28,8 +28,8 @@ const totalProductsInCart = computed(() => store.getters['cart/getCartItemsCount
         <router-link to="/about" exact-active-class="active" class="nav-link">About</router-link>
       </li>
       <li>
-        <router-link to="/contact" exact-active-class="active" class="nav-link"
-          >Contact</router-link
+        <router-link to="/favorites" exact-active-class="active" class="nav-link"
+          >Favorites</router-link
         >
       </li>
     </ul>
